@@ -1,0 +1,44 @@
+﻿*** Settings ***
+Library      	Selenium2Library
+Library      	OperatingSystem
+Suite Setup	Initialize
+Suite Teardown  Finalize
+
+
+*** Variables ***
+${HOMEPAGE}	https://www.hotline.ua
+${BROWSER}	chrome
+${MESSAGE1}	iPhone 7
+${MESSAGE2}	найдено
+${ELEMENT}	xpath=//ul[@class='products-list cell-list']/li[1]/div[3]/div[1]/p/a
+
+
+*** Test Cases ***
+Open hotline and find iphone7
+
+	#Entering the page
+	Hotline data input	${MESSAGE1}	${MESSAGE1}
+
+	#Clicking the first link
+	Click Element			${ELEMENT}
+
+	#Saving the screenshot to another directory
+	Create Directory		C:/result
+	Set Screenshot Directory	C:/result
+	Capture Page Screenshot		test_result.png
+	Sleep	2
+     
+
+*** Keywords ***
+Hotline data input
+	[Arguments]	${searchkey}	${result}
+	Input Text	id=searchbox	${searchkey}
+	Click Button	id=doSearch
+	Wait Until Page Contains 	${MESSAGE2}
+
+Initialize
+	Open Browser	${HOMEPAGE}	${BROWSER}
+	Maximize Browser Window
+
+Finalize
+	Close Browser
